@@ -19,17 +19,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-// state = {
-//   text: "_"
-// }
-// changeText = (text) => {
-//   this.setState({ text });
-// }
-// const { text } = this.state
-
-
-
-//onClick={ () => { this.changeText("O")}  }
+state = {
+  text: "_"
+}
+changeText = (text) => {
+  this.setState({ text });
+}
+const { text } = this.state 
 
 function FormRow() {
   const classes = useStyles();
@@ -37,18 +33,18 @@ function FormRow() {
       <React.Fragment>
         <Grid item xs={4} alignContent="center">
           {/*<Paper className={classes.paper}>_</Paper>*/}
-          <Button variant="contained" color="primary">
-            _
+          <Button onClick={ () => { this.changeText("O")}  }variant="contained" color="primary">
+            {text}
           </Button>
         </Grid>
         <Grid item xs={4}>
-          <Button variant="contained" color="primary">
-            _
+          <Button onClick={ () => { this.changeText("O")}  }variant="contained" color="primary">
+            {text}
           </Button>
         </Grid>
         <Grid item xs={4}>
-          <Button variant="contained" color="primary">
-            _
+          <Button onClick={ () => { this.changeText("O")}  }variant="contained" color="primary">
+            {text}
           </Button>
         </Grid>
       </React.Fragment>
