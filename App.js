@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom'
 
 import Button from '@material-ui/core/Button';
 //import logo from './logo.svg';
@@ -21,21 +22,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Cell({takeTurn, cellNumber}) {
-  console.log(takeTurn);
   const [text, setText] = useState('_');
   return (
-    <Button onClick={ () => { if (text == '_') {setText(takeTurn(cellNumber));} } } variant="contained" color="primary" color="primary">
+    <Button onClick={ () => { if (text == '_') {setText(takeTurn(cellNumber));} } } variant="contained" color="primary">
       {text}
     </Button>
   );
 }
 
 function FormRow({takeTurn, row}) {
-  console.log(takeTurn);
   const classes = useStyles();
     return (
       <React.Fragment>
-        <Grid item xs={1} alignContent="center">
+        <Grid container item xs={1} alignItems="center">
           {/*<Paper className={classes.paper}>_</Paper>*/}
           {/*<Button onClick={ () => { this.changeText("O")}  }variant="contained" color="primary">
             {text}
@@ -52,69 +51,44 @@ function FormRow({takeTurn, row}) {
     );
 }
 
-function isWin({board}) {
-    let row1 = [board[0], board[1], board[2]];
-    let row2 = [board[3], board[4], board[5]];
-    let row3 = [board[6], board[7], board[8]];
-
-    let col1 = [board[0], board[3], board[6]];
-    let col2 = [board[1], board[4], board[7]];
-    let col3 = [board[2], board[5], board[8]];
-
-    let diag1 = [board[0], board[4], board[8]];
-    let diag2 = [board[2], board[4], board[6]];
-
-    if (['X','X','X'] === row1) {
-        return true
-    } else if (['X','X','X'] === row2) {
-        return true
-    } else if (['X','X','X'] === row3) {
-        return true
-    } else if (['X','X','X'] === col1) {
-        return true
-    } else if (['X','X','X'] === col2) {
-        return true
-    } else if (['X','X','X'] === col3) {
-        return true
-    } else if (['X','X','X'] === diag1) {
-        return true
-    } else if (['X','X','X'] === diag2) {
-        return true
-    } else if (['O','O','O'] === row1) {
-        return true
-    } else if (['O','O','O'] === row2) {
-        return true
-    } else if (['O','O','O'] === row3) {
-        return true
-    } else if (['O','O','O'] === col1) {
-        return true
-    } else if (['O','O','O'] === col2) {
-        return true
-    } else if (['O','O','O'] === col3) {
-        return true
-    } else if (['O','O','O'] === diag1) {
-        return true
-    } else if (['O','O','O'] === diag2) {
-        return true
-    } else if (['-','-','-'] === row1) {
-        return false
-    } else if (['-','-','-'] === row2) {
-        return false
-    } else if (['-','-','-'] === row3) {
-        return false
-    } else if (['-','-','-'] === col1) {
-        return false
-    } else if (['-','-','-'] === col2) {
-        return false
-    } else if (['-','-','-'] === col3) {
-        return false
-    } else if (['-','-','-'] === diag1) {
-        return false
-    } else if (['-','-','-'] === diag2) {
-        return false
-    } else {
-      return false
+function isWin(board) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (board[a] !== '_' && board[a] === board[b] && board[a] === board[c]) {
+      return board[a];
     }
+  }
+  return null;
+}
+
+function isTie(board) {
+  return !(board.includes('_'))
+}
+
+function show(win, tie) {
+  let element = '';
+  if (win == 'O') {
+    element = <h3>O wins!</h3>;
+    return ReactDOM.render(element, document.getElementById('root'));
+  }
+  if (win == 'X') {
+    element = <h3>X wins!</h3>;
+    return ReactDOM.render(element, document.getElementById('root'));
+  }
+  if (tie == true) {
+    element = <h3>It's a tie!</h3>;
+    return ReactDOM.render(element, document.getElementById('root'));
+  }
 }
 
 function App() {
@@ -126,18 +100,20 @@ function App() {
     setTurn(turn === "X" ? "O" : "X");
     board[cellNumber] = thisTurn;
     setBoard(board);
-    let state = isWin(board);
+    const win = isWin(board);
+    const tie = isTie(board);
+    const some = show(win, tie)
     console.log(board);
-    console.log(state);
-  return thisTurn;
+    console.log(win);
+    console.log(tie);
+    console.log(some);
+    return thisTurn;
   }
   return (
     <div className="App">
       <header className="App-header">
       {/*<img src={logo} className="App-logo" alt="logo" />*/}
       <Grid container spacing={1}>
-        <Grid container item xs={7} spacing={5}>
-        </Grid>
         <Grid container item xs={7} spacing={5}>
           <FormRow row={0} takeTurn={takeTurn}/>
         </Grid>
