@@ -8,6 +8,7 @@ import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import {useState} from 'react';
 
 const useStyles = makeStyles(theme => ({
@@ -75,25 +76,23 @@ function isTie(board) {
   return !(board.includes('_'))
 }
 
-function show(win, tie) {
-  let element = '';
+function show(win, tie, message) {
   if (win == 'O') {
-    element = <h3>O wins!</h3>;
-    return ReactDOM.render(element, document.getElementById('root'));
+    message = "O wins!";
+  } else if (win == 'X') {
+    message = "X wins!";
+  } else if (tie == true) {
+    message = "It's a tie!";
+  } else {
+    message = "";
   }
-  if (win == 'X') {
-    element = <h3>X wins!</h3>;
-    return ReactDOM.render(element, document.getElementById('root'));
-  }
-  if (tie == true) {
-    element = <h3>It's a tie!</h3>;
-    return ReactDOM.render(element, document.getElementById('root'));
-  }
+  return message;
 }
 
 function App() {
   const [board, setBoard] = useState(['_', '_', '_', '_', '_', '_', '_', '_', '_']);
   const [turn, setTurn] = useState("X");
+  const [message, setMessage] = useState("");
 
   const takeTurn = (cellNumber) => {
     const thisTurn = turn;
@@ -102,11 +101,10 @@ function App() {
     setBoard(board);
     const win = isWin(board);
     const tie = isTie(board);
-    const some = show(win, tie)
+    setMessage(show(win, tie));
     console.log(board);
     console.log(win);
     console.log(tie);
-    console.log(some);
     return thisTurn;
   }
   return (
@@ -124,6 +122,7 @@ function App() {
           <FormRow row={2} takeTurn={takeTurn}/>
         </Grid>
       </Grid>
+      <Typography variant="h3">{message}</Typography>
       </header>
     </div>
   );
